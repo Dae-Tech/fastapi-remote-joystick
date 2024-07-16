@@ -9,7 +9,9 @@ drone = System()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    
+    loop = asyncio.get_event_loop()
+
+    loop.create_task(handle_controls)
     print("Connecting to drone...")
     await drone.connect(system_address="udp://:14540")
 
@@ -34,7 +36,6 @@ async def lifespan(app: FastAPI):
     print("-- Starting manual control")
     await drone.manual_control.start_position_control()
    
-    asyncio.create_task(handle_controls)
 
     yield
 
@@ -62,3 +63,6 @@ async def websocket_endpoint(websocket: WebSocket):
     while True:
         data = await websocket.receive_text()
         await websocket.send_text(f"Message text was: {data}")
+
+if __name__ == '__main__':
+    print("vamooos")
