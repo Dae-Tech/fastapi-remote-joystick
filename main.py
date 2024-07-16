@@ -5,13 +5,14 @@ from contextlib import asynccontextmanager
 import asyncio
 
 
-drone = System()
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    drone = System()
     loop = asyncio.get_event_loop()
 
-    loop.create_task(handle_controls)
+    loop.create_task(handle_controls(drone))
     print("Connecting to drone...")
     await drone.connect(system_address="udp://:14540")
 
