@@ -9,7 +9,7 @@ drone = System()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """
+    
     print("Connecting to drone...")
     await drone.connect(system_address="udp://:14540")
 
@@ -33,7 +33,9 @@ async def lifespan(app: FastAPI):
 
     print("-- Starting manual control")
     await drone.manual_control.start_position_control()
-    """
+   
+    await drone.manual_control.set_manual_control_input(app.state.pitch,app.state.roll,app.state.thrust,app.state.yaw)
+
     yield
 
 
@@ -43,12 +45,11 @@ app = FastAPI(lifespan=lifespan)
 app.state.roll = 0
 app.state.yaw = 0
 app.state.pitch = 0
-app.state.thrust = 0
+app.state.thrust = 1
 
 
 @app.get("/")
 async def get():
-    print(app.state.roll)
     return "running"
 
 
