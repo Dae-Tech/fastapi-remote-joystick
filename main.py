@@ -31,7 +31,7 @@ async def lifespan(app: FastAPI):
     await asyncio.sleep(5)
 
     print("-- Starting manual control")
-    await drone.manual_control.start_position_control()
+    await drone.manual_control.start_position_control(0,0,0,0)
 
     yield
 
