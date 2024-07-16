@@ -1,4 +1,4 @@
-from fastapi import FastAPI, WebSocket
+from fastapi import FastAPI, WebSocket,BackgroundTasks
 from fastapi.responses import HTMLResponse
 from mavsdk import System
 from contextlib import asynccontextmanager
@@ -34,12 +34,13 @@ async def lifespan(app: FastAPI):
     print("-- Starting manual control")
     await drone.manual_control.start_position_control()
    
-    await drone.manual_control.set_manual_control_input(app.state.pitch,app.state.roll,app.state.thrust,app.state.yaw)
+    asyncio.create_task(handle_controls)
 
     yield
 
 
-
+async def handle_controls(drone):
+    await drone.manual_control.set_manual_control_input(app.state.pitch,app.state.roll,app.state.thrust,app.state.yaw)
 
 app = FastAPI(lifespan=lifespan)
 app.state.roll = 0
