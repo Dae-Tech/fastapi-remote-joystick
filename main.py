@@ -16,7 +16,7 @@ async def lifespan(app: FastAPI):
     print("Connecting to drone...")
     await drone.connect(system_address="udp://:14540")
 
-    loop.create_task(handle_controls(drone))
+   
 
     print("Waiting for drone to connect...")
     async for state in drone.core.connection_state():
@@ -39,6 +39,7 @@ async def lifespan(app: FastAPI):
     print("-- Starting manual control")
     await drone.manual_control.start_position_control()
    
+    loop.create_task(handle_controls(drone))
 
     yield
 
