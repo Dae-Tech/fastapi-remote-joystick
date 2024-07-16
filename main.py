@@ -34,12 +34,13 @@ async def lifespan(app: FastAPI):
 
     print("-- Taking off")
     await drone.action.takeoff()
-    await asyncio.sleep(5)
+    await asyncio.sleep(10)
+    loop.create_task(handle_controls(drone))
 
     print("-- Starting manual control")
     await drone.manual_control.start_position_control()
    
-    loop.create_task(handle_controls(drone))
+   
 
     yield
 
