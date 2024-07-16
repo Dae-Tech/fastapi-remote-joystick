@@ -9,6 +9,7 @@ drone = System()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """
     print("Connecting to drone...")
     await drone.connect(system_address="udp://:14540")
 
@@ -31,16 +32,22 @@ async def lifespan(app: FastAPI):
     await asyncio.sleep(5)
 
     print("-- Starting manual control")
-    await drone.manual_control.start_position_control(0,0,0,0)
-
+    await drone.manual_control.start_position_control()
+    """
     yield
 
 
+
+
 app = FastAPI(lifespan=lifespan)
+data = "si"
 
 
 @app.get("/")
 async def get():
+    print(data)
+    data="no"
+    print(data)
     return "running"
 
 
