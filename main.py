@@ -40,14 +40,15 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-data = "si"
+app.state.roll = 0
+app.state.yaw = 0
+app.state.pitch = 0
+app.state.thrust = 0
 
 
 @app.get("/")
 async def get():
-    print(data)
-    data="no"
-    print(data)
+    print(app.state.roll)
     return "running"
 
 
