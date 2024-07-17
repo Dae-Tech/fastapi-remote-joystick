@@ -6,12 +6,12 @@ import asyncio
 
 
 
-drone = System()
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
 
     
- 
+    drone = System()
     loop = asyncio.get_event_loop()
 
     
@@ -41,7 +41,7 @@ async def lifespan(app: FastAPI):
     app.state.yaw = 0.0
     app.state.pitch = 0.0
     app.state.thrust = 0.7
-    
+    loop.create_task(handle_controls(drone))
     print("-- wait")
     await asyncio.sleep(1)
     print("-- Starting manual control")
@@ -59,9 +59,6 @@ async def lifespan(app: FastAPI):
 async def handle_controls(drone):
     while True:
         print("doing da work")
-        print(app.state.pitch)
-        print(app.state.roll)
-        print(app.state.thrust)
         await drone.manual_control.set_manual_control_input(app.state.pitch,app.state.roll,app.state.thrust,app.state.yaw)
 
 app = FastAPI(lifespan=lifespan)
@@ -79,7 +76,6 @@ async def websocket_endpoint(websocket: WebSocket):
         app.state.pitch = data['pitch']
         app.state.roll = data['roll']
         app.state.thrust = data['throttle']
-        await drone.manual_control.set_manual_control_input(app.state.pitch,app.state.roll,app.state.thrust,app.state.yaw)
 
         await websocket.send_text(f"Message text was: {data}")
 
