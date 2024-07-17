@@ -9,6 +9,8 @@ import asyncio
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+
+    """
     drone = System()
     loop = asyncio.get_event_loop()
 
@@ -48,7 +50,7 @@ async def lifespan(app: FastAPI):
 
     await drone.action.land()
     print("-- end")
-   
+    """
    
 
     yield
@@ -63,12 +65,9 @@ app = FastAPI(lifespan=lifespan)
 
 
 
-@app.get("/")
-async def get():
-    return "running"
 
 
-@app.websocket("/ws")
+@app.websocket("/")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
