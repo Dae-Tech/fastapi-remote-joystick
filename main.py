@@ -72,6 +72,9 @@ async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
         data = await websocket.receive_text()
+        app.state.pitch = data.pitch
+        app.state.roll = data.roll
+        app.state.thrust = data.throttle
         await websocket.send_text(f"Message text was: {data}")
 
 if __name__ == '__main__':
