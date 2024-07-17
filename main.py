@@ -53,7 +53,6 @@ async def lifespan(app: FastAPI):
 
 async def handle_controls(drone):
     while True:
-        print("doing da work")
         print(roll,pitch,throttle)
         await drone.manual_control.set_manual_control_input(pitch,roll,throttle,0)
 
