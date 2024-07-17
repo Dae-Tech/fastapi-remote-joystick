@@ -7,7 +7,7 @@ import asyncio
 
 roll = 0.0
 pitch = 0.0
-throttle = 0.0
+throttle = 0.7
 yaw = 0.0
 
 @asynccontextmanager
@@ -67,7 +67,7 @@ async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
         data = await websocket.receive_json()
-        print("Updating data with  {roll}")
+        print("Updating data with  {data}")
         pitch = data['pitch']
         roll = data['roll']
         throttle = data['throttle']
