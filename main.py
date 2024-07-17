@@ -41,22 +41,17 @@ async def lifespan(app: FastAPI):
     await drone.action.takeoff()
     await asyncio.sleep(10)
    
-    loop.create_task(handle_controls(drone,app))
+    loop.create_task(handle_controls(drone))
     print("-- wait")
     await asyncio.sleep(1)
     print("-- Starting manual control")
     await drone.manual_control.start_position_control()
     await asyncio.sleep(5)
 
-    
-    
-    
-   
-
     yield
 
 
-async def handle_controls(drone,app):
+async def handle_controls(drone):
     while True:
         print("doing da work")
         print(roll,pitch,throttle)
@@ -64,17 +59,13 @@ async def handle_controls(drone,app):
 
 app = FastAPI(lifespan=lifespan)
 
-
-
-
-
 @app.websocket("/")
 async def websocket_endpoint(websocket: WebSocket):
     global roll, pitch, yaw, throttle
     await websocket.accept()
     while True:
         data = await websocket.receive_json()
-        print(data)
+        print("Updating data with  {roll}")
         pitch = data['pitch']
         roll = data['roll']
         throttle = data['throttle']
