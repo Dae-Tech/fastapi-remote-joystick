@@ -71,7 +71,7 @@ app = FastAPI(lifespan=lifespan)
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
-        data = await websocket.receive_text()
+        data = await websocket.receive_json()
         print(data)
         app.state.pitch = data.pitch
         app.state.roll = data.roll
