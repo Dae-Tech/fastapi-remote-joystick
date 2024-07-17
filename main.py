@@ -41,7 +41,7 @@ async def lifespan(app: FastAPI):
     app.state.yaw = 0.0
     app.state.pitch = 0.0
     app.state.thrust = 0.7
-    loop.create_task(handle_controls(drone))
+    loop.create_task(handle_controls(drone,app))
     print("-- wait")
     await asyncio.sleep(1)
     print("-- Starting manual control")
@@ -56,9 +56,12 @@ async def lifespan(app: FastAPI):
     yield
 
 
-async def handle_controls(drone):
+async def handle_controls(drone,app):
     while True:
         print("doing da work")
+        print(app.state.pitch)
+        print(app.state.roll)
+        print(app.state.thrust)
         await drone.manual_control.set_manual_control_input(app.state.pitch,app.state.roll,app.state.thrust,app.state.yaw)
 
 app = FastAPI(lifespan=lifespan)
