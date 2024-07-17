@@ -9,12 +9,13 @@ roll = 0.0
 pitch = 0.0
 throttle = 0.0
 yaw = 0.0
-drone = System()
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
 
     
-   
+    drone = System()
+    loop = asyncio.get_event_loop()
 
     
     print("Connecting to drone...")
@@ -39,7 +40,13 @@ async def lifespan(app: FastAPI):
     print("-- Taking off")
     await drone.action.takeoff()
     await asyncio.sleep(10)
-  
+   
+    loop.create_task(handle_controls(drone,app))
+    print("-- wait")
+    await asyncio.sleep(1)
+    print("-- Starting manual control")
+    await drone.manual_control.start_position_control()
+    await asyncio.sleep(5)
 
     
     
@@ -50,7 +57,6 @@ async def lifespan(app: FastAPI):
 
 
 async def handle_controls(drone,app):
-    global roll, pitch, yaw, throttle
     while True:
         print("doing da work")
         print(roll,pitch,throttle)
@@ -67,20 +73,11 @@ async def websocket_endpoint(websocket: WebSocket):
     global roll, pitch, yaw, throttle
     await websocket.accept()
     while True:
-         
-        loop = asyncio.get_event_loop()
         data = await websocket.receive_json()
         print(data)
         pitch = data['pitch']
         roll = data['roll']
         throttle = data['throttle']
-         
-        loop.create_task(handle_controls(drone,app))
-        print("-- wait")
-        await asyncio.sleep(1)
-        print("-- Starting manual control")
-        await drone.manual_control.start_position_control()
-
 
         await websocket.send_text(f"Message text was: {data}")
 
