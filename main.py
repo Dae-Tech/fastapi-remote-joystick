@@ -10,7 +10,7 @@ import asyncio
 @asynccontextmanager
 async def lifespan(app: FastAPI):
 
-    """
+    
     drone = System()
     loop = asyncio.get_event_loop()
 
@@ -48,9 +48,9 @@ async def lifespan(app: FastAPI):
     await drone.manual_control.start_position_control()
     await asyncio.sleep(5)
 
-    await drone.action.land()
-    print("-- end")
-    """
+    
+    
+    
    
 
     yield
