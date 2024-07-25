@@ -79,7 +79,7 @@ async def websocket_endpoint(websocket: WebSocket):
         r.hset("controls:1","roll",data['roll'])
         r.hset("controls:1","throttle",data["throttle"])
 
-        await websocket.send_text(f"Message text was: {data}")
+        await websocket.send_json(data)
 
 
 if __name__ == '__main__':
