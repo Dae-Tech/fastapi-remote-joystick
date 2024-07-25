@@ -2,13 +2,21 @@ from fastapi import FastAPI, WebSocket,BackgroundTasks
 from fastapi.responses import HTMLResponse
 from mavsdk import System
 from contextlib import asynccontextmanager
+import redis
 import asyncio
 
+r = redis.Redis(host="redis",port=6379,db=0, decode_responses=True,password="JEANPAUL")
+r.bgsave()
 
-roll = 0.0
-pitch = 0.0
-throttle = 0.7
-yaw = 0.0
+
+controls = r.hset("controls:1", mapping={
+    "throttle":0,
+    "roll":0,
+    "pitch":0,
+    "yaw":0,
+})
+
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -68,11 +76,17 @@ async def websocket_endpoint(websocket: WebSocket):
     while True:
         data = await websocket.receive_json()
         print("Updating data with  {data}")
-        pitch = data['pitch']
-        roll = data['roll']
-        throttle = data['throttle']
+        r.hset("controls:1","pitch",data['pitch'])
+        r.hset("controls:1","roll",data['roll'])
+        r.hset("controls:1","throttle",data["throttle"])
 
         await websocket.send_text(f"Message text was: {data}")
+@app.websocket("/state")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accep()
+    while True:
+        data = r.hgetall("controls:1")
+        await websocket.send_text(f"Controls are: {data}")
 
 if __name__ == '__main__':
     print("vamooos")
