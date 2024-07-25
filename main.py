@@ -69,7 +69,7 @@ async def handle_controls(drone):
 
 app = FastAPI(lifespan=lifespan)
 
-@app.websocket("/")
+@app.websocket("/socket")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
@@ -80,12 +80,7 @@ async def websocket_endpoint(websocket: WebSocket):
         r.hset("controls:1","throttle",data["throttle"])
 
         await websocket.send_text(f"Message text was: {data}")
-@app.websocket("/state")
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    while True:
-        data = r.hgetall("controls:1")
-        await websocket.send_text(f"Controls are: {data}")
+
 
 if __name__ == '__main__':
     print("vamooos")
