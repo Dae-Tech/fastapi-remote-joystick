@@ -83,7 +83,7 @@ async def websocket_endpoint(websocket: WebSocket):
         await websocket.send_text(f"Message text was: {data}")
 @app.websocket("/state")
 async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accep()
+    await websocket.accept()
     while True:
         data = r.hgetall("controls:1")
         await websocket.send_text(f"Controls are: {data}")
