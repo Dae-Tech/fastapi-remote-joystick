@@ -10,7 +10,7 @@ r.bgsave()
 
 
 controls = r.hset("controls:1", mapping={
-    "throttle":0.5,
+    "throttle":0.7,
     "roll":0,
     "pitch":0,
     "yaw":0,
