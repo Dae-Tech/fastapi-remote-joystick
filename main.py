@@ -15,7 +15,7 @@ controls = r.hset("controls:1", mapping={
     "pitch":0,
     "yaw":0,
 })
-print(controls)
+
 
 
 
@@ -62,10 +62,10 @@ async def lifespan(app: FastAPI):
 
 async def handle_controls(drone):
     while True:
-        print("Doing update of of controls")
+        
         data = r.hgetall("controls:1")
         print(data)
-        await drone.manual_control.set_manual_control_input(float(data["pitch"]),float(data["roll"]),float(data["throttle"]),data["yaw2"])
+        await drone.manual_control.set_manual_control_input(float(data["pitch"]),float(data["roll"]),float(data["throttle"]),data["yaw"])
 
 app = FastAPI(lifespan=lifespan)
 
@@ -83,5 +83,4 @@ async def websocket_endpoint(websocket: WebSocket):
         await websocket.send_json(data)
 
 
-if __name__ == '__main__':
-    print("vamooos")
+
