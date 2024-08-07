@@ -74,7 +74,7 @@ async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
         data = await websocket.receive_json()
-        print("Updating data with  {data}")
+        print(f"Updating data with  {data}")
         r.hset("controls:1","pitch",data['pitch'])
         r.hset("controls:1","roll",data['roll'])
         r.hset("controls:1","throttle",data["throttle"])
