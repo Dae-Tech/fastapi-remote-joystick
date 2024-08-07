@@ -65,7 +65,7 @@ async def handle_controls(drone):
         
         data = r.hgetall("controls:1")
         print(data)
-        await drone.manual_control.set_manual_control_input(float(data["pitch"]),float(data["roll"]),float(data["throttle"]),data["yaw"])
+        await drone.manual_control.set_manual_control_input(float(data["pitch"]),float(data["roll"]),float(data["throttle"]),float(data["yaw"]))
 
 app = FastAPI(lifespan=lifespan)
 
