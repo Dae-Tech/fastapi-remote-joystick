@@ -78,7 +78,7 @@ async def websocket_endpoint(websocket: WebSocket):
         r.hset("controls:1","pitch",data['pitch'])
         r.hset("controls:1","roll",data['roll'])
         r.hset("controls:1","throttle",data["throttle"])
-        r.hset("controls:1","throttle",data["yaw"])
+        r.hset("controls:1","yaw",data["yaw"])
 
         await websocket.send_json(data)
 
