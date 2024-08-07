@@ -6,7 +6,7 @@ import redis
 import asyncio
 
 r = redis.Redis(host="redis",port=6379,db=0, decode_responses=True,password="JEANPAUL")
-r.bgsave()
+
 
 
 controls = r.hset("controls:1", mapping={
