@@ -72,7 +72,7 @@ async def print_altitude(drone):
             altitude = round(position.relative_altitude_m,2)
             print(f"current altitude is {altitude}")
             r.hset("state:1","altitude",altitude)
-            logger.info(f"Altitude: {altitude}")
+          
 
 async def handle_controls(drone):
     while True:
