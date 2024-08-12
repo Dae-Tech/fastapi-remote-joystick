@@ -69,7 +69,7 @@ async def print_altitude(drone):
     
 
     async for position in drone.telemetry.position():
-        altitude = round(position.relative_altitude_m)
+        altitude = round(position.relative_altitude_m,2)
         r.hset("state:1","altitude",altitude)
         logger.info(f"Altitude: {altitude}")
 
