@@ -70,6 +70,7 @@ async def print_altitude(drone):
     while True:
         async for position in drone.telemetry.position():
             altitude = round(position.relative_altitude_m,2)
+            print(f"current altitude is {altitude}")
             r.hset("state:1","altitude",altitude)
             logger.info(f"Altitude: {altitude}")
 
@@ -77,7 +78,7 @@ async def handle_controls(drone):
     while True:
         
         data = r.hgetall("controls:1")
-        print(r.hgetall("state:1"))
+       
         await drone.manual_control.set_manual_control_input(float(data["pitch"]),float(data["roll"]),float(data["throttle"]),float(data["yaw"]))
 
 app = FastAPI(lifespan=lifespan)
