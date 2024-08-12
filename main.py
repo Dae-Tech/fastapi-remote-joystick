@@ -67,11 +67,11 @@ async def print_altitude(drone):
     """ Prints the altitude when it changes """
 
     
-
-    async for position in drone.telemetry.position():
-        altitude = round(position.relative_altitude_m,2)
-        r.hset("state:1","altitude",altitude)
-        logger.info(f"Altitude: {altitude}")
+    while True:
+        async for position in drone.telemetry.position():
+            altitude = round(position.relative_altitude_m,2)
+            r.hset("state:1","altitude",altitude)
+            logger.info(f"Altitude: {altitude}")
 
 async def handle_controls(drone):
     while True:
