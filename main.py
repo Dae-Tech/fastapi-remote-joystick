@@ -16,6 +16,9 @@ controls = r.hset("controls:1", mapping={
     "yaw":0,
 })
 
+drone_state = r.hset("state:1", mapping = {
+"altitude": 0,
+})
 
 
 
@@ -51,6 +54,7 @@ async def lifespan(app: FastAPI):
     await asyncio.sleep(10)
    
     loop.create_task(handle_controls(drone))
+    loop.create_task(print_altitude(drone))
     print("-- wait")
     await asyncio.sleep(1)
     print("-- Starting manual control")
@@ -59,6 +63,15 @@ async def lifespan(app: FastAPI):
 
     yield
 
+async def print_altitude(drone):
+    """ Prints the altitude when it changes """
+
+    
+
+    async for position in drone.telemetry.position():
+        altitude = round(position.relative_altitude_m)
+        r.hset("state:1","altitude",altitude)
+        logger.info(f"Altitude: {altitude}")
 
 async def handle_controls(drone):
     while True:
@@ -73,14 +86,16 @@ app = FastAPI(lifespan=lifespan)
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
+        
         data = await websocket.receive_json()
+        altitude = r.hgetall("state:1")
         print(f"Updating data with  {data}")
         r.hset("controls:1","pitch",data['pitch'])
         r.hset("controls:1","roll",data['roll'])
         r.hset("controls:1","throttle",data["throttle"])
         r.hset("controls:1","yaw",data["yaw"])
 
-        await websocket.send_json(data)
+        await websocket.send_json(altitude)
 
 
 
